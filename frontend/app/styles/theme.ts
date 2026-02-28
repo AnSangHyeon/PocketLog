@@ -1,16 +1,23 @@
 export const theme = {
   colors: {
-    primary: "#3B82F6",
-    background: "#F5F7FB",
+    primary: "#2563EB",
+    background: "#F8FAFC",
+    border: "#E2E8F0",
 
     text: {
       primary: "#111827",
       secondary: "#6B7280",
     },
 
+    menu: {
+      hoverBg: "#F1F5F9",
+      activeBg: "#EBF2FF",
+      activeText: "#2563EB",
+    },
+
     status: {
-      income: "#10B981",
-      expense: "#EF4444",
+      income: "#7eff64",
+      expense: "#e15050",
     },
 
     card: "#FFF",

@@ -15,8 +15,17 @@ export default function RootLayout({
       <body>
         <ThemeProvider theme={theme}>
           <GlobalStyles />
-          <Header />
-          {children}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '250px 1fr',
+              maxWidth: '100%',
+              background: '{(props) => props.theme.colors.background}'
+            }}
+          >
+            <Header />
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>
