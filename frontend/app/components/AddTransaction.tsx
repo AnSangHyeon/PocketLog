@@ -14,7 +14,7 @@ import {
 import {useState} from "react";
 import axios from "axios";
 
-export default function AddTransaction() {
+export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () => void }) {
   const [selectedCategory, setSelectedCategory] = useState("식비");
   const categories = ["식비", "쇼핑", "교통비", "기타지출"];
   const [isIncome, setIsIncome] = useState(true);
@@ -46,6 +46,9 @@ export default function AddTransaction() {
       const response = await axios.post('http://localhost:8080/api/transactions', payload);
 
       if (response.status === 200 || response.status === 201) {
+        if (onSaveSuccess) {
+          onSaveSuccess();
+        }
         alert(`${isIncome ? '수입' : '지출'} 내역이 저장되었습니다!`);
       }
     } catch (error) {

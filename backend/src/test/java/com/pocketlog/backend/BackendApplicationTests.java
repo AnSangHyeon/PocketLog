@@ -1,4 +1,4 @@
-package com.personalfinancedashboard.backend;
+package com.pocketlog.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

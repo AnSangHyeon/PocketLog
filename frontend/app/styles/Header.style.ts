@@ -45,12 +45,14 @@ export const MenuLink = styled(Link)<{$active: boolean}>`
   align-items: center;
   padding-left: 8px;
   height: 100%;
-    border-radius: 7px;
+  border-radius: 7px;
+  transition: all 0.8s;
 
   color: ${({ $active }) => 
     ($active ? (props) => theme.colors.menu.activeText : '')
   };
   background: ${({ $active }) =>
-          ($active ? (props) => theme.colors.menu.activeBg : '')
+    ($active ? (props) => theme.colors.menu.activeBg : '')
   };
 `;
+
