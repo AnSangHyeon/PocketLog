@@ -5,6 +5,7 @@ import com.pocketlog.backend.service.TranscationsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,5 +22,10 @@ public class AddTransactionsController {
     @GetMapping("/api/dashboard")
     public Map<String, Object> getDashboard() {
         return transcationsService.getDashboardData();
+    }
+
+    @GetMapping("/api/getAllTransactions")
+    public List<Transactions> getAllTransactions() {
+        return transcationsService.getAllTransactions();
     }
 }

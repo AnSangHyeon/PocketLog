@@ -32,4 +32,8 @@ public class TranscationsService {
 
         return response;
     }
+
+    public List<Transactions> getAllTransactions() {
+        return transactionsRepository.findAll();
+    }
 }

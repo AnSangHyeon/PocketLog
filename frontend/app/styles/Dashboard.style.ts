@@ -9,6 +9,7 @@ export const DashBoardWrap = styled.div`
 export const FinanceCardWrap = styled.div`
   display: grid;
   grid-template-columns: 1.9fr 1fr;
+  min-height: calc(100vh - 40px);
 `;
 
 export const LeftSection = styled.section`
@@ -23,5 +24,4 @@ export const LeftSection = styled.section`
 
 export const RightSection = styled.aside`
   width: 100%;
-  position: relative;
 `;
