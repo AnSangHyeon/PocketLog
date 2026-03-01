@@ -1,7 +1,7 @@
 export const theme = {
   colors: {
     primary: "#2563EB",
-    background: "#F8FAFC",
+    background: "#dddddd",
     border: "#E2E8F0",
 
     text: {
@@ -11,7 +11,7 @@ export const theme = {
 
     menu: {
       hoverBg: "#F1F5F9",
-      activeBg: "#EBF2FF",
+      activeBg: "#d5e2ff",
       activeText: "#2563EB",
     },
 

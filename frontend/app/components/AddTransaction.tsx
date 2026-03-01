@@ -15,20 +15,14 @@ import {useState} from "react";
 import axios from "axios";
 
 export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () => void }) {
-  const [selectedCategory, setSelectedCategory] = useState("식비");
-  const categories = ["식비", "쇼핑", "교통비", "기타지출"];
+  const [selectedCategory, setSelectedCategory] = useState("food");
+  const categories = ["food", "shopping", "transport", "etc"];
   const [isIncome, setIsIncome] = useState(true);
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [memo, setMemo] = useState("");
 
   async function addTransactions() {
-    // 타입(예: income or expense
-    // amount
-    // date
-    // category
-    // memo
-
     if (!amount || amount === "0") {
       alert("금액을 입력해주세요.");
       return;
@@ -38,7 +32,7 @@ export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () =>
       type: isIncome ? "income" : "expense",
       amount: Number(amount),
       date: date,
-      category: isIncome? selectedCategory : "",
+      category: isIncome ? "" : selectedCategory,
       memo: memo,
     };
 
@@ -94,18 +88,27 @@ export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () =>
           <CalendarIcon src={"/icons/calendar.svg"}/>
         </InputGroup>
 
-        {isIncome &&
+        {!isIncome &&
           <InputGroup>
             <GroupTitle>카테고리</GroupTitle>
             <CategoryWrapper>
               {categories.map((cat) => (
                 <CategoryChip
                   key={cat}
-                  type="button" // 폼 안에 있을 때 엔터 쳐서 제출되는 것 방지
+                  type="button"
                   $isActive={selectedCategory === cat}
                   onClick={() => setSelectedCategory(cat)}
                 >
-                  {cat}
+                  {
+                    cat === "food" ? 
+                    "식비" :
+                    cat === "shopping" ?
+                    "쇼핑" :
+                    cat === "transport" ? 
+                    "교통비" :
+                    cat === "etc" ?
+                    "기타지출" : ""
+                  }
                 </CategoryChip>
               ))}
             </CategoryWrapper>

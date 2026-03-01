@@ -24,8 +24,13 @@ public class AddTransactionsController {
         return transcationsService.getDashboardData();
     }
 
-    @GetMapping("/api/getAllTransactions")
-    public List<Transactions> getAllTransactions() {
-        return transcationsService.getAllTransactions();
+    @GetMapping("/api/transactions")
+    public List<Transactions> getTransactions(
+        @RequestParam int year,
+        @RequestParam int month,
+        @RequestParam String type,
+        @RequestParam String category
+    ) {
+        return transcationsService.getFilteredTransactions(year, month, type, category);
     }
 }

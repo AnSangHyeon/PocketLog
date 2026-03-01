@@ -33,7 +33,7 @@ public class TranscationsService {
         return response;
     }
 
-    public List<Transactions> getAllTransactions() {
-        return transactionsRepository.findAll();
+    public List<Transactions> getFilteredTransactions(int year, int month, String type, String category) {
+        return transactionsRepository.findByFilters(year, month, type, category);
     }
 }

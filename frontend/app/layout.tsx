@@ -20,7 +20,7 @@ export default function RootLayout({
               display: 'grid',
               gridTemplateColumns: '250px 1fr',
               maxWidth: '100%',
-              background: '{(props) => props.theme.colors.background}'
+              background: theme.colors.background
             }}
           >
             <Header />

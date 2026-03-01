@@ -14,6 +14,10 @@ export const ListSection = styled.div`
   border: 3px solid ${(props) => theme.colors.menu.activeBg};
   margin: 10px;
   font-size: 17px;
+    
+  div:last-child {
+    border-radius: 0 0 12px 12px;
+  }
 `;
 
 export const ListHead = styled.div`
@@ -41,4 +45,14 @@ export const ListBody = styled.div`
     vertical-align: center;
     word-break: break-all
   }
+`;
+
+export const FilterSection = styled.div`
+  border-radius: 12px;
+  text-align: center;
+  border: 3px solid ${(props) => theme.colors.menu.activeBg};
+  margin: 10px;
+  font-size: 17px;
+  display: flex;
+  justify-content: space-between;
 `;
