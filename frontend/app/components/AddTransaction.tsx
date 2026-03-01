@@ -14,13 +14,33 @@ import {
 import {useState} from "react";
 import axios from "axios";
 
-export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () => void }) {
-  const [selectedCategory, setSelectedCategory] = useState("food");
+interface AddTransactionProps {
+  onSaveSuccess: () => void,
+  editingItem?: any,
+}
+
+export default function AddTransaction({ onSaveSuccess, editingItem }:AddTransactionProps) {
+  const [selectedCategory, setSelectedCategory] = useState(editingItem?.category || "food");
   const categories = ["food", "shopping", "transport", "etc"];
-  const [isIncome, setIsIncome] = useState(true);
-  const [amount, setAmount] = useState("");
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [memo, setMemo] = useState("");
+  const [isIncome, setIsIncome] = useState(editingItem ? editingItem.type === "income" : true);
+  const [amount, setAmount] = useState(editingItem?.amount?.toString() || "");
+  const [date, setDate] = useState(editingItem?.date || new Date().toISOString().split('T')[0]);
+  const [memo, setMemo] = useState(editingItem?.memo || "");
+
+  async function deleteTransaction() {
+    if (!confirm("정말 이 내역을 삭제하시겠습니까?")) return;
+
+    try {
+      const response = await axios.delete(`http://localhost:8080/api/transactions/${editingItem.id}`);
+      // 성공 시 모달 닫고 리스트 새로고침
+      if (response.status === 200 || response.status === 204) {
+        onSaveSuccess();
+      }
+    } catch (error) {
+      console.error("삭제 중 오류 발생:", error);
+      alert("삭제에 실패했습니다.");
+    }
+  }
 
   async function addTransactions() {
     if (!amount || amount === "0") {
@@ -28,31 +48,34 @@ export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () =>
       return;
     }
 
-    const isConfirmed = confirm(`${isIncome ? '수입' : '지출'} 내역을 저장하시겠습니까?`);
-
-    if (!isConfirmed) {
-      return;
-    }
+    const modeText = editingItem ? "수정" : (isIncome ? "수입" : "지출");
+    if (!confirm(`${modeText} 내역을 저장하시겠습니까?`)) return;
 
     const payload = {
       type: isIncome ? "income" : "expense",
       amount: Number(amount),
       date: date,
-      category: isIncome ? "" : selectedCategory,
+      category: isIncome ? "income" : selectedCategory,
       memo: memo,
     };
 
     try {
-      const response = await axios.post('http://localhost:8080/api/transactions', payload);
+      let response;
+
+      if (editingItem) {
+        // 수정
+        response = await axios.put(`http://localhost:8080/api/transactions/${editingItem.id}`, payload);
+      } else {
+        // 삭제
+        response = await axios.post('http://localhost:8080/api/transactions', payload);
+      }
 
       if (response.status === 200 || response.status === 201) {
-        if (onSaveSuccess) {
-          onSaveSuccess();
-        }
+        onSaveSuccess();
       }
     } catch (error) {
-      console.error("데이터 저장 중 오류 발생:", error);
-      alert("저장에 실패했습니다. 다시 시도해주세요.");
+      console.error("데이터 처리 중 오류 발생:", error);
+      alert("요청에 실패했습니다.");
     }
   }
 
@@ -66,7 +89,12 @@ export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () =>
             수입
           </IncomeTab>
           <ExpenseTab
-            onClick={() => setIsIncome(false)}
+            onClick={
+              () => {
+                setIsIncome(false);
+                setSelectedCategory("food");
+              }
+            }
           >
             지출
           </ExpenseTab>
@@ -75,6 +103,7 @@ export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () =>
         <InputGroup style={{padding:'0'}}>
           <GroupTitle>금액</GroupTitle>
           <CustomMount
+            value={amount}
             placeholder={isIncome ? "수입을 입력하세요" : "지출을 입력하세요"}
             onChange={(e) => setAmount(e.target.value)}
           />
@@ -87,6 +116,7 @@ export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () =>
         <InputGroup>
           <GroupTitle>날짜</GroupTitle>
           <CustomDateInput
+            value={date}
             type={"date"}
             onChange={(e) => setDate(e.target.value)}
           />
@@ -122,31 +152,37 @@ export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () =>
 
         <InputGroup>
           <GroupTitle>메모</GroupTitle>
-          <Memo onChange={(e) => setMemo(e.target.value)} />
+          <Memo
+            value={memo}
+            onChange={(e) => setMemo(e.target.value)}
+          />
         </InputGroup>
 
         <InputGroup>
-          {isIncome ?
-            <IncomeTab
-              style={{
-                width: '100%',
-                height: `50px`,
-              }}
-              onClick={addTransactions}
-            >
-              수입 추가하기
-            </IncomeTab>
-            :
-            <ExpenseTab
-              style={{
-                width: '100%',
-                height: `50px`,
-              }}
-              onClick={addTransactions}
-            >
-              지출 추가하기
-            </ExpenseTab>
-          }
+          {editingItem ? (
+            /* 1. 수정 모드일 때 (모달 안에서 보임) */
+            <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+              <ExpenseTab onClick={deleteTransaction}>삭제하기</ExpenseTab>
+              <IncomeTab onClick={addTransactions}>수정하기</IncomeTab>
+            </div>
+          ) : (
+            /* 2. 추가 모드일 때 (오른쪽 섹션에서 보임) */
+            isIncome ? (
+              <IncomeTab
+                style={{ width: '100%', height: '50px' }}
+                onClick={addTransactions}
+              >
+                수입 추가하기
+              </IncomeTab>
+            ) : (
+              <ExpenseTab
+                style={{ width: '100%', height: '50px' }}
+                onClick={addTransactions}
+              >
+                지출 추가하기
+              </ExpenseTab>
+            )
+          )}
         </InputGroup>
       </AddTransactionForm>
     </AddTransactionWrap>

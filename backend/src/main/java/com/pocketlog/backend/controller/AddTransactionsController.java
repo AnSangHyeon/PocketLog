@@ -3,6 +3,7 @@ package com.pocketlog.backend.controller;
 import com.pocketlog.backend.entity.Transactions;
 import com.pocketlog.backend.service.TranscationsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,5 +33,19 @@ public class AddTransactionsController {
         @RequestParam String category
     ) {
         return transcationsService.getFilteredTransactions(year, month, type, category);
+    }
+
+    @PutMapping("/api/transactions/{id}")
+    public ResponseEntity<Transactions> updateTransaction(
+        @PathVariable Long id,
+        @RequestBody Transactions detail
+    ) {
+        return ResponseEntity.ok(transcationsService.update(id, detail));
+    }
+
+    @DeleteMapping("/api/transactions/{id}")
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+        transcationsService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

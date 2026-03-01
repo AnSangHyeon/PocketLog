@@ -9,7 +9,7 @@ import axios from "axios";
 import {FilterSection, ListBody, ListHead, ListSection, ListWrapper} from "@/app/styles/TransactionsList.style";
 import {theme} from "@/app/styles/theme";
 import {FilterButtonGroup, FilterCategorySelect, MonthFilter} from "@/app/components/Filters";
-import {ModalContent, ModalOverlay} from "@/app/styles/Modal.style";
+import {ModalContent, ModalOverlay, XIcon} from "@/app/styles/Modal.style";
 
 interface Transaction {
   id: number;
@@ -33,16 +33,10 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Transaction | null>(null);
 
-  // 행 클릭 시 실행될 함수
+  // 행을 클릭했을 때 실행될 함수
   const handleRowClick = (item: Transaction) => {
     setSelectedItem(item);
     setIsModalOpen(true);
-  };
-
-  // 모달 닫기
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedItem(null);
   };
 
   const year = currentDate.getFullYear();
@@ -125,9 +119,9 @@ export default function Home() {
               gap: '20px'
             }}
           >
-            <FinanceCard title={"수입"} amount={summary.income} type={"income"} />
-            <FinanceCard title={"지출"} amount={summary.expense} type={"expense"} />
-            <FinanceCard title={"잔액"} amount={summary.balance} type={"balance"} />
+            <FinanceCard title={"총 수입"} amount={summary.income} type={"income"} />
+            <FinanceCard title={"총 지출"} amount={summary.expense} type={"expense"} />
+            <FinanceCard title={"총 잔액"} amount={summary.balance} type={"balance"} />
           </div>
 
           <ListWrapper>
@@ -147,6 +141,9 @@ export default function Home() {
                   alignItems: 'center'
                 }}
               >
+                {/* 달별 수입, 지출, 잔액 */}
+
+                
                 {/* 전체, 수입, 지출 필터링 버튼 */}
                 <FilterButtonGroup
                   currentType={filterType}
@@ -160,6 +157,7 @@ export default function Home() {
                 />
               </div>
             </FilterSection>
+
             <ListSection>
               <ListHead>
                 <div>날짜</div>
@@ -216,21 +214,24 @@ export default function Home() {
         </RightSection>
       </FinanceCardWrap>
 
-      {isModalOpen && selectedItem && (
-        <ModalOverlay onClick={closeModal}>
+      {isModalOpen && (
+        <ModalOverlay onClick={() => setIsModalOpen(false)}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
-            <h2>내역 상세 정보</h2>
-            <p>날짜: {selectedItem.date}</p>
-            <p>금액: {selectedItem.amount.toLocaleString()}원</p>
-            <p>카테고리: {selectedItem.category}</p>
-            <p>메모: {selectedItem.memo}</p>
-
-            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-              {/*<button onClick={() => handleEdit(selectedItem)}>수정</button>*/}
-              {/*<button onClick={() => handleDelete(selectedItem.id)} style={{ color: 'red' }}>삭제</button>*/}
-              <button onClick={closeModal}>닫기</button>
-            </div>
+            <AddTransaction
+              onSaveSuccess={() => {
+                setIsModalOpen(false);
+                fetchSummary();
+                fetchTransactions();
+              }}
+              editingItem={selectedItem}
+            />
+            <XIcon
+              src={"/icons/x.svg"}
+              onClick={() => setIsModalOpen(false)}
+            />
           </ModalContent>
+
+
         </ModalOverlay>
       )}
     </DashBoardWrap>

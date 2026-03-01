@@ -21,9 +21,5 @@ export const theme = {
     },
 
     card: "#FFF",
-  },
-
-  typography: {
-    fontFamily: "'Inter', sans-serif",
-  },
+  }
 };

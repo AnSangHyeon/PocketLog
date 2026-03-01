@@ -36,4 +36,26 @@ public class TranscationsService {
     public List<Transactions> getFilteredTransactions(int year, int month, String type, String category) {
         return transactionsRepository.findByFilters(year, month, type, category);
     }
+
+    @Transactional // 이게 있어야 DB에 자동으로 저장됩니다!
+    public Transactions update(Long id, Transactions newData) {
+        Transactions transaction = transactionsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 내역이 없습니다. id=" + id));
+
+        transaction.setAmount(newData.getAmount());
+        transaction.setCategory(newData.getCategory());
+        transaction.setMemo(newData.getMemo());
+        transaction.setDate(newData.getDate());
+        transaction.setType(newData.getType());
+
+        return transaction;
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        if (!transactionsRepository.existsById(id)) {
+            throw new IllegalArgumentException("삭제하려는 내역이 존재하지 않습니다. id=" + id);
+        }
+        transactionsRepository.deleteById(id);
+    }
 }

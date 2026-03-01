@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 import {theme} from "@/app/styles/theme";
+import FinanceCard from "@/app/components/FinanceCard";
 
 export const FinCardWrapper = styled.div`
   padding: 20px;
@@ -14,3 +15,4 @@ export const FinAmount = styled.div`
   padding: 20px 0 0 0;
   font-size: 27px;
 `;
+

@@ -32,32 +32,6 @@ export default function Header() {
             Dashboard
           </MenuLink>
         </MenuBtn>
-
-        <MenuBtn>
-          <MenuLink
-            href={"/Transactions"}
-            $active={path == '/Transactions'}
-          >
-            <HeaderIcons
-              src={"/icons/arrow.svg"}
-              alt={"화살표 아이콘"}
-            />
-            Transactions
-          </MenuLink>
-        </MenuBtn>
-
-        <MenuBtn>
-          <MenuLink
-            href={"/AddTransaction"}
-            $active={path == '/AddTransaction'}
-          >
-            <HeaderIcons
-              src={"/icons/plus.svg"}
-              alt={"더하기 아이콘"}
-            />
-            AddTransaction
-          </MenuLink>
-        </MenuBtn>
       </BtnsWrapper>
     </HeaderWrapper>
   );
