@@ -9,6 +9,7 @@ import axios from "axios";
 import {FilterSection, ListBody, ListHead, ListSection, ListWrapper} from "@/app/styles/TransactionsList.style";
 import {theme} from "@/app/styles/theme";
 import {FilterButtonGroup, FilterCategorySelect, MonthFilter} from "@/app/components/Filters";
+import {ModalContent, ModalOverlay} from "@/app/styles/Modal.style";
 
 interface Transaction {
   id: number;
@@ -29,6 +30,20 @@ export default function Home() {
   const [filterType, setfilterType] = useState("all");
   const [currentCategory, setCurrentCategory] = useState("all");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Transaction | null>(null);
+
+  // 행 클릭 시 실행될 함수
+  const handleRowClick = (item: Transaction) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedItem(null);
+  };
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
@@ -157,6 +172,7 @@ export default function Home() {
                 transactions.map((item) => (
                   <ListBody
                     key={item.id}
+                    onClick={() => handleRowClick(item)}
                     style={
                       item.type === "income" ?
                       {background: theme.colors.status.income}
@@ -199,6 +215,24 @@ export default function Home() {
           </div>
         </RightSection>
       </FinanceCardWrap>
+
+      {isModalOpen && selectedItem && (
+        <ModalOverlay onClick={closeModal}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <h2>내역 상세 정보</h2>
+            <p>날짜: {selectedItem.date}</p>
+            <p>금액: {selectedItem.amount.toLocaleString()}원</p>
+            <p>카테고리: {selectedItem.category}</p>
+            <p>메모: {selectedItem.memo}</p>
+
+            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+              {/*<button onClick={() => handleEdit(selectedItem)}>수정</button>*/}
+              {/*<button onClick={() => handleDelete(selectedItem.id)} style={{ color: 'red' }}>삭제</button>*/}
+              <button onClick={closeModal}>닫기</button>
+            </div>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </DashBoardWrap>
   );
 }

@@ -28,6 +28,12 @@ export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () =>
       return;
     }
 
+    const isConfirmed = confirm(`${isIncome ? '수입' : '지출'} 내역을 저장하시겠습니까?`);
+
+    if (!isConfirmed) {
+      return;
+    }
+
     const payload = {
       type: isIncome ? "income" : "expense",
       amount: Number(amount),
@@ -43,7 +49,6 @@ export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () =>
         if (onSaveSuccess) {
           onSaveSuccess();
         }
-        alert(`${isIncome ? '수입' : '지출'} 내역이 저장되었습니다!`);
       }
     } catch (error) {
       console.error("데이터 저장 중 오류 발생:", error);
@@ -70,7 +75,7 @@ export default function AddTransaction({ onSaveSuccess }: { onSaveSuccess: () =>
         <InputGroup style={{padding:'0'}}>
           <GroupTitle>금액</GroupTitle>
           <CustomMount
-            placeholder={"3,500,000"}
+            placeholder={isIncome ? "수입을 입력하세요" : "지출을 입력하세요"}
             onChange={(e) => setAmount(e.target.value)}
           />
           <WonIcon
