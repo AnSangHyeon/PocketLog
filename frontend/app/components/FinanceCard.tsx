@@ -14,7 +14,7 @@ export default function FinanceCard({ title, amount, type }:CardTypes) {
       {background: theme.colors.status.income}:
       type === "expense" ?
       {background: theme.colors.status.expense}:
-      {background: theme.colors.menu.activeBg}
+      {background: theme.colors.status.balance}
     }
     >
       <FinTitle>{title}</FinTitle>

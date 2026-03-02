@@ -24,4 +24,11 @@ export const LeftSection = styled.section`
 
 export const RightSection = styled.aside`
   width: 100%;
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+  height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;

@@ -17,9 +17,5 @@ declare module "styled-components" {
         expense: string;
       };
     };
-
-    typography: {
-      fontFamily: string;
-    };
   }
 }

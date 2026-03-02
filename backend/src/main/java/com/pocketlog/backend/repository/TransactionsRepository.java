@@ -29,4 +29,25 @@ public interface TransactionsRepository extends JpaRepository<Transactions, Long
         @Param("type") String type,
         @Param("category") String category
     );
+
+    // 해당 년, 월의 카테고리별 금액을 가져오는 쿼리
+    @Query("""
+        SELECT t.category, SUM(t.amount) 
+        FROM Transactions t 
+        WHERE YEAR(t.date) = :year 
+          AND MONTH(t.date) = :month 
+          AND t.type = 'expense'
+        GROUP BY t.category
+    """)
+    List<Object[]> findCategorySumByMonth(@Param("year") int year, @Param("month") int month);
+
+    // 해당 년, 월의 수입, 지출, 잔액을 가져오는 쿼리
+    @Query("""
+        SELECT t.type, SUM(t.amount) 
+        FROM Transactions t 
+        WHERE YEAR(t.date) = :year 
+          AND MONTH(t.date) = :month 
+        GROUP BY t.type
+    """)
+    List<Object[]> findMonthlySummary(@Param("year") int year, @Param("month") int month);
 }

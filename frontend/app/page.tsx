@@ -10,6 +10,8 @@ import {FilterSection, ListBody, ListHead, ListSection, ListWrapper} from "@/app
 import {theme} from "@/app/styles/theme";
 import {FilterButtonGroup, FilterCategorySelect, MonthFilter} from "@/app/components/Filters";
 import {ModalContent, ModalOverlay, XIcon} from "@/app/styles/Modal.style";
+import DonutChart from "@/app/components/DonutChart";
+import MonthlyBarChart from "@/app/components/MonthlyBarChart";
 
 interface Transaction {
   id: number;
@@ -32,6 +34,8 @@ export default function Home() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Transaction | null>(null);
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [barChartData, setBarChartData] = useState<any[]>([]);
 
   // 행을 클릭했을 때 실행될 함수
   const handleRowClick = (item: Transaction) => {
@@ -61,13 +65,28 @@ export default function Home() {
   const handleCategoryChange = (newCategory: string) => {
     setCurrentCategory(newCategory);
   };
+
+  const fetchMonthlySummary = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/transactions/summary', {
+        params: { year, month }
+      });
+
+      // 백엔드에서 온 [{name: 'income', value: 100}, {name: 'expense', value: 50}] 를 저장
+      setBarChartData(response.data);
+    } catch (error) {
+      console.error("막대 차트 데이터를 가져오는데 실패했습니다.", error);
+    }
+  };
   
   // 수입, 지출, 잔액 요청하는 함수
   const fetchSummary = async () => {
     console.log("함수 시작됨");
     try {
       const res = await axios.get('http://localhost:8080/api/dashboard');
-      fetchTransactions();
+      fetchTransactions()
+      fetchChartStats();
+      fetchMonthlySummary();
       console.log("res 서버 응답 성공", res.data);
       setSummary({
         income: res.data.totalIncome,
@@ -98,12 +117,34 @@ export default function Home() {
       console.error("데이터 로딩 실패!", error);
     }
   };
+  
+  // 차트 호출
+  const fetchChartStats = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/stats/category', {
+        params: {
+          year: currentDate.getFullYear(),
+          month: currentDate.getMonth() + 1,
+        }
+      });
+
+      const formatted = response.data.map((item: any) => ({
+        name: item[0],
+        value: item[1]
+      }));
+
+      setChartData(formatted);
+    } catch (error) {
+      console.error("차트 데이터 로딩 실패", error);
+    }
+  };
 
   useEffect(() => {
     fetchSummary();
-  }, []);
+    fetchChartStats();
+    fetchMonthlySummary();
+  }, [year, month]);
 
-  // 필터값 바뀌면 호출
   useEffect(() => {
     fetchTransactions();
   }, [currentDate, filterType, currentCategory]);
@@ -205,11 +246,12 @@ export default function Home() {
         </LeftSection>
 
         <RightSection>
-          <div>
-            <AddTransaction onSaveSuccess={fetchSummary} />
-            <div>
-              그래프
-            </div>
+          <AddTransaction onSaveSuccess={fetchSummary} />
+          <div style={{ flex: 1, minHeight: '0' }}>
+            <DonutChart year={year} month={month} data={chartData} />
+          </div>
+          <div style={{ flex: 1, minHeight: '0' }}>
+            <MonthlyBarChart year={year} month={month} rawData={barChartData} />
           </div>
         </RightSection>
       </FinanceCardWrap>
@@ -230,8 +272,6 @@ export default function Home() {
               onClick={() => setIsModalOpen(false)}
             />
           </ModalContent>
-
-
         </ModalOverlay>
       )}
     </DashBoardWrap>

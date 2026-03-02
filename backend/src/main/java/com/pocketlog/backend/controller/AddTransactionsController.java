@@ -48,4 +48,18 @@ public class AddTransactionsController {
         transcationsService.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/api/stats/category")
+    public List<Object[]> getCategoryStats(@RequestParam int year, @RequestParam int month) {
+        return transcationsService.getCategoryStats(year, month);
+    }
+
+    @GetMapping("/api/transactions/summary")
+    public ResponseEntity<List<Map<String, Object>>> getMonthlySummary(
+            @RequestParam("year") int year,
+            @RequestParam("month") int month) {
+
+        List<Map<String, Object>> summary = transcationsService.getMonthlySummary(year, month);
+        return ResponseEntity.ok(summary);
+    }
 }

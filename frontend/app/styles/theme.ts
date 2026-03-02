@@ -1,11 +1,11 @@
 export const theme = {
   colors: {
-    primary: "#2563EB",
-    background: "#dddddd",
+    primary: "#3B82F6",
+    background: "#E2E8F0",
     border: "#E2E8F0",
 
     text: {
-      primary: "#111827",
+      primary: "#0F172A",
       secondary: "#6B7280",
     },
 
@@ -16,8 +16,9 @@ export const theme = {
     },
 
     status: {
-      income: "#7eff64",
-      expense: "#e15050",
+      income: "#D3F9D8",
+      expense: "#FFE3E3",
+      balance: "#E7F5FF",
     },
 
     card: "#FFF",

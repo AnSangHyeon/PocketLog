@@ -6,10 +6,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +54,24 @@ public class TranscationsService {
             throw new IllegalArgumentException("삭제하려는 내역이 존재하지 않습니다. id=" + id);
         }
         transactionsRepository.deleteById(id);
+    }
+
+    @Transactional
+    public List<Object[]> getCategoryStats(int year, int month) {
+        return transactionsRepository.findCategorySumByMonth(year, month);
+    }
+
+    @Transactional
+    public List<Map<String, Object>> getMonthlySummary(int year, int month) {
+        List<Object[]> results = transactionsRepository.findMonthlySummary(year, month);
+        List<Map<String, Object>> summaryList = new ArrayList<>();
+
+        for (Object[] result : results) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("name", result[0]);
+            map.put("value", result[1]);
+            summaryList.add(map);
+        }
+        return summaryList;
     }
 }

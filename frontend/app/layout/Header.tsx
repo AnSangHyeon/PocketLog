@@ -1,38 +1,46 @@
 'use client'
 
 import {
-  BtnsWrapper,
-  HeaderIcons,
   HeaderWrapper,
-  LogoStyle,
-  MenuBtn, MenuLink
+  LogoWrapper,
+  LogoText, HeaderClock,
 } from "@/app/styles/Header.style";
-import Link from "next/link";
-import {usePathname} from "next/navigation";
+import {useEffect, useState} from "react";
 
 export default function Header() {
-  const path = usePathname();
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const timeString = now.toLocaleTimeString('ko-KR', {
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 
   return(
     <HeaderWrapper>
-      <LogoStyle>
-        PocketLog
-      </LogoStyle>
+      <LogoWrapper>
+        <LogoText onClick={() => window.location.reload()}>
+          <span className="point">Pocket</span>
+          <span className="sub">Log</span>
+        </LogoText>
 
-      <BtnsWrapper>
-        <MenuBtn>
-          <MenuLink
-            href={"/"}
-            $active={path == '/'}
-          >
-            <HeaderIcons
-              src={"/icons/home.svg"}
-              alt={"홈 아이콘"}
-            />
-            Dashboard
-          </MenuLink>
-        </MenuBtn>
-      </BtnsWrapper>
+        <div
+          style={{
+            width: '100%',
+            pointerEvents: 'none',
+          }}
+        >
+          <HeaderClock><img src={"/icons/clock.svg"} /> {timeString}</HeaderClock>
+        </div>
+      </LogoWrapper>
     </HeaderWrapper>
   );
 }
