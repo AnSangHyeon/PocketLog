@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList} from 'recharts';
 import {ChartWrapper} from "@/app/styles/Chart.style";
 
 interface RawData {
@@ -52,10 +52,21 @@ export default function MonthlyBarChart({ year, month, rawData = [] }: RawData) 
             ]}
             cursor={{ fill: 'transparent' }}
           />
-          <Bar dataKey="value" radius={[5, 5, 0, 0]} barSize={70}>
+          <Bar
+            dataKey="value"
+            radius={[5, 5, 0, 0]}
+            barSize={70}
+          >
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
+            <LabelList
+              dataKey="value"
+              position="center"
+              offset={10}
+              formatter={(val: any) => `${Number(val).toLocaleString()}원`}
+              style={{ fill: '#666', fontSize: '12px', fontWeight: 'bold' }}
+            />
           </Bar>
         </BarChart>
       </ResponsiveContainer>

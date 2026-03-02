@@ -37,7 +37,7 @@ export const LogoText = styled.h1`
 export const HeaderWrapper = styled.div`
   width: 250px;
   background-color: ${(props) => props.theme.colors.card};
-  min-height: 100vh;
+  max-height: 100vh;
   position: sticky;
   top: 0;
   align-self: flex-start;

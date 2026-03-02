@@ -1,6 +1,6 @@
 'use client'
 
-import {DashBoardWrap, FinanceCardWrap, LeftSection, RightSection} from "@/app/styles/Dashboard.style";
+import {DashBoardWrap, FinanceCardWrap, LeftSection, ListDetailWrap, RightSection} from "@/app/styles/Dashboard.style";
 import FinanceCard from "@/app/components/FinanceCard";
 import {AddTransactionForm} from "@/app/styles/AddTransaction.style";
 import AddTransaction from "@/app/components/AddTransaction";
@@ -158,7 +158,8 @@ export default function Home() {
             style={{
               display: 'grid',
               gridTemplateColumns: '1fr 1fr 1fr',
-              gap: '20px'
+              gap: '20px',
+              margin: '0 0 20px 0'
             }}
           >
             <FinanceCard title={"총 수입"} amount={summary.income} type={"income"} />
@@ -183,9 +184,6 @@ export default function Home() {
                   alignItems: 'center'
                 }}
               >
-                {/* 달별 수입, 지출, 잔액 */}
-
-                
                 {/* 전체, 수입, 지출 필터링 버튼 */}
                 <FilterButtonGroup
                   currentType={filterType}
@@ -208,40 +206,42 @@ export default function Home() {
                 <div>메모</div>
               </ListHead>
 
-              {transactions.length > 0 ? (
-                transactions.map((item) => (
-                  <ListBody
-                    key={item.id}
-                    onClick={() => handleRowClick(item)}
-                    style={
-                      item.type === "income" ?
-                      {background: theme.colors.status.income}
-                      :
-                      {background: theme.colors.status.expense}
-                    }
-                  >
-                    <div>{item.date}</div>
-                    <div>{item.amount.toLocaleString()}원</div>
-                    <div>
-                      {
-                        item.category === "food" ?
-                        "식비" :
-                        item.category === "shopping" ?
-                        "쇼핑" :
-                        item.category === "transport" ?
-                        "교통비" :
-                        item.category === "etc" ?
-                        "기타지출" : ""
+              <ListDetailWrap>
+                {transactions.length > 0 ? (
+                  transactions.map((item) => (
+                    <ListBody
+                      key={item.id}
+                      onClick={() => handleRowClick(item)}
+                      style={
+                        item.type === "income" ?
+                          {background: theme.colors.status.income}
+                          :
+                          {background: theme.colors.status.expense}
                       }
-                    </div>
-                    <div>{item.memo}</div>
+                    >
+                      <div>{item.date}</div>
+                      <div>{item.amount.toLocaleString()}원</div>
+                      <div>
+                        {
+                          item.category === "food" ?
+                            "식비" :
+                            item.category === "shopping" ?
+                              "쇼핑" :
+                              item.category === "transport" ?
+                                "교통비" :
+                                item.category === "etc" ?
+                                  "기타지출" : ""
+                        }
+                      </div>
+                      <div>{item.memo}</div>
+                    </ListBody>
+                  ))
+                ) : (
+                  <ListBody>
+                    리스트가 존재하지않습니다
                   </ListBody>
-                ))
-              ) : (
-                <ListBody>
-                  리스트가 존재하지않습니다
-                </ListBody>
-              )}
+                )}
+              </ListDetailWrap>
             </ListSection>
           </ListWrapper>
         </LeftSection>
