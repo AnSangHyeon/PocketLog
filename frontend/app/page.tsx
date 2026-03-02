@@ -59,6 +59,7 @@ export default function Home() {
   // 버튼 필터 값 변경
   const handleFilterChange = (newType:string) => {
     setfilterType(newType);
+    setCurrentCategory("all");
   };
 
   // 카테고리 필터 값 변경

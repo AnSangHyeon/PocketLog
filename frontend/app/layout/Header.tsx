@@ -28,8 +28,8 @@ export default function Header() {
     <HeaderWrapper>
       <LogoWrapper>
         <LogoText onClick={() => window.location.reload()}>
-          <span className="point">Pocket</span>
-          <span className="sub">Log</span>
+          <span className="point">용&nbsp;돈&nbsp;</span>
+          <span className="sub">관&nbsp;리&nbsp;</span>
         </LogoText>
 
         <div

@@ -66,11 +66,15 @@ export default function AddTransaction({ onSaveSuccess, editingItem }:AddTransac
         // 수정
         response = await axios.put(`http://localhost:8080/api/transactions/${editingItem.id}`, payload);
       } else {
-        // 삭제
+        // 추가
         response = await axios.post('http://localhost:8080/api/transactions', payload);
       }
 
       if (response.status === 200 || response.status === 201) {
+        setAmount("");
+        setMemo("");
+        setSelectedCategory("food");
+        setDate(new Date().toISOString().split('T')[0]);
         onSaveSuccess();
       }
     } catch (error) {

@@ -30,7 +30,7 @@ export const LogoText = styled.h1`
 
   .sub {
     color: ${(props) => props.theme.colors.text.primary};
-    font-weight: 700;
+    font-weight: 500;
   }
 `;
 
