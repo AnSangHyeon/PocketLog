@@ -53,7 +53,7 @@ export default function AddTransaction({ onSaveSuccess, editingItem }:AddTransac
 
     const payload = {
       type: isIncome ? "income" : "expense",
-      amount: Number(amount),
+      amount: Math.abs(Number(amount)),
       date: date,
       category: isIncome ? "income" : selectedCategory,
       memo: memo,
